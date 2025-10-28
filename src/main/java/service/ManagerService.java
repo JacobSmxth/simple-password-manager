@@ -2,6 +2,7 @@ package service;
 
 import domain.Account;
 import dto.AccountUpdateDTO;
+import exception.GlobalExceptionHandler;
 
 import java.util.List;
 import java.util.Scanner;
@@ -14,6 +15,7 @@ public class ManagerService {
     public static void print(String msg) {
         System.out.print(msg);
     }
+
     public static void println(String msg) {
         System.out.println(msg);
     }
@@ -21,7 +23,7 @@ public class ManagerService {
     public void showAccount(Account acc) {
         print("id: " + acc.getId());
         println(" {");
-        println("site: \'" + acc.getSite() +"\",");
+        println("site: \'" + acc.getSite() + "\",");
         println("username: \"" + acc.getUsername() + "\",");
         println("password: \"" + acc.getPassword() + "\",");
         println("lastChange: " + acc.getLastChange() + "");
@@ -32,10 +34,10 @@ public class ManagerService {
         println("\n=== All Accounts ===\n");
         List<Account> accs = service.listAllAccounts();
         for (int i = 0; i < accs.size(); i++) {
-          showAccount(accs.get(i));
-          if (i != accs.size() - 1) {
-              println(",");
-          }
+            showAccount(accs.get(i));
+            if (i != accs.size() - 1) {
+                println(",");
+            }
         }
     }
 
@@ -49,7 +51,11 @@ public class ManagerService {
         String password = sc.nextLine();
 
         println("New account added.");
-        showAccount(service.addAccount(new Account(site, username, password)));
+        try {
+            showAccount(service.addAccount(new Account(site, username, password)));
+        } catch (Exception ex) {
+            GlobalExceptionHandler.handle(ex);
+        }
     }
 
     public void changeAccount() {
@@ -57,25 +63,29 @@ public class ManagerService {
         println("\n");
 
         AccountUpdateDTO dto = new AccountUpdateDTO();
-        print("Enter account id: ");
-        int id = Integer.parseInt(sc.nextLine());
-        print("Would you like to change site? (y/n): ");
-        if (sc.nextLine().equalsIgnoreCase("y")) {
-            print("Enter new site name: ");
-            dto.setSite(sc.nextLine());
-        }
-        print("Would you like to change username? (y/n): ");
-        if (sc.nextLine().equalsIgnoreCase("y")) {
-            print("Enter new username: ");
-            dto.setUsername(sc.nextLine());
-        }
-        print("Would you like to change password? (y/n): ");
-        if (sc.nextLine().equalsIgnoreCase("y")) {
-            print("Enter new password: ");
-            dto.setPassword(sc.nextLine());
-        }
-        service.changeAccount(id, dto);
-        System.out.println("domain.Account has been updated.");
+        GlobalExceptionHandler.handleWithRetry(() -> {
+            print("Enter account id: ");
+            int id = Integer.parseInt(sc.nextLine());
+            service.checkId(id);
+            print("Would you like to change site? (y/n): ");
+            if (sc.nextLine().equalsIgnoreCase("y")) {
+                print("Enter new site name: ");
+                dto.setSite(sc.nextLine());
+            }
+            print("Would you like to change username? (y/n): ");
+            if (sc.nextLine().equalsIgnoreCase("y")) {
+                print("Enter new username: ");
+                dto.setUsername(sc.nextLine());
+            }
+            print("Would you like to change password? (y/n): ");
+            if (sc.nextLine().equalsIgnoreCase("y")) {
+                print("Enter new password: ");
+                dto.setPassword(sc.nextLine());
+            }
+            service.changeAccount(id, dto);
+            System.out.println("domain.Account has been updated.");
+        }, sc);
+
     }
 
     public void closeScanner() {

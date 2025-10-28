@@ -2,6 +2,8 @@ package service;
 
 import domain.Account;
 import dto.AccountUpdateDTO;
+import exception.AccountNotChanged;
+import exception.AccountNotFound;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,7 +29,16 @@ public class AccountService {
         return account;
     }
 
-    public void deleteAccount(int id) {
+    public boolean checkId(int id) {
+        for (Account acc : accounts) {
+            if (acc.getId() == id) {
+                return true;
+            }
+        }
+        throw new AccountNotFound(id);
+    }
+
+    public void deleteAccount(int id) throws AccountNotFound{
         boolean found = false;
         for (Account acc : accounts) {
             if (acc.getId() == id) {
@@ -37,7 +48,7 @@ public class AccountService {
             }
         }
         if (!found) {
-            throw new RuntimeException("Not found");
+            throw new AccountNotFound(id);
         }
 
     }
@@ -54,7 +65,7 @@ public class AccountService {
             }
         }
         if (!found) {
-            throw new RuntimeException("Not found");
+            throw new AccountNotFound(id);
         }
 
         if (dto.getSite() != null) {
@@ -75,7 +86,7 @@ public class AccountService {
         if (changed) {
             account.setLastChange(LocalDateTime.now().toString());
         } else {
-            throw new RuntimeException("Nothing different");
+            throw new AccountNotChanged("Account already contains those values");
         }
 
 
