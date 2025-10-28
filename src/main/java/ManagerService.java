@@ -9,15 +9,43 @@ public class ManagerService {
     }
 
     public Account addAccount(Account account) {
+        account.setId(accounts.size() + 1);
         accounts.add(account);
         return account;
     }
 
-    public void deleteAccount(Account account) {
-        accounts.remove(account);
+    public void deleteAccount(int id) {
+        for (Account acc : accounts) {
+            if (acc.getId() == id) {
+                accounts.remove(acc);
+            } else {
+                throw new RuntimeException("Not found");
+            }
+        }
     }
 
-    public Account changeAccount(Account account) { // Plan to make an accountDTO thing
+    public Account changeAccount(int id, AccountUpdateDTO dto) { // Plan to make an accountDTO thing
+        Account account = null;
+        for (Account acc: accounts) {
+            if (acc.getId() == id) {
+                account = acc;
+            } else {
+                throw new RuntimeException("Not found");
+            }
+        }
+
+        if (dto.getSite() != null) {
+            account.setSite(dto.getSite());
+        }
+
+        if (dto.getUsername() != null) {
+            account.setUsername(dto.getUsername());
+        }
+
+        if (dto.getPassword() != null) {
+            account.setPassword(dto.getPassword());
+        }
+
         return account;
     }
 }
