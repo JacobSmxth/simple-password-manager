@@ -4,7 +4,7 @@ import java.util.List;
 public class ManagerService {
     List<Account> accounts = new ArrayList<>();
 
-    public List<Account> getAllAccounts() {
+    public List<Account> showAccounts() {
         return accounts;
     }
 
