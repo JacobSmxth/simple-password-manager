@@ -1,75 +1,36 @@
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
 
 public class ManagerService {
-    List<Account> accounts = new ArrayList<>();
+    AccountService service = new AccountService();
+    Scanner sc = new Scanner(System.in);
 
-    public List<Account> showAccounts() {
-        return accounts;
+
+    public static void print(String msg) {
+        System.out.print(msg);
+    }
+    public static void println(String msg) {
+        System.out.println(msg);
     }
 
-    public Account addAccount(Account account) {
-        account.setId(accounts.size() + 1);
-        accounts.add(account);
-        return account;
+    public void showAccount(Account acc) {
+        print("id: " + acc.getId());
+        println(" {");
+        println("site: " + acc.getSite() +",");
+        println("username: " + acc.getUsername() + ",");
+        println("password: " + acc.getPassword() + ",");
+        println("lastChange: " + acc.getLastChange());
+        println("}");
     }
 
-    public void deleteAccount(int id) {
-        boolean found = false;
-        for (Account acc : accounts) {
-            if (acc.getId() == id) {
-                found = true;
-                accounts.remove(acc);
-                break;
-            }
+    public void showAllAccounts() {
+        for (Account acc : service.accounts) {
+          showAccount(acc);
         }
-        if (!found) {
-            throw new RuntimeException("Not found");
-        }
-
     }
 
-    public Account changeAccount(int id, AccountUpdateDTO dto) { // Plan to make an accountDTO thing
-        Account account = null;
-        boolean changed = false;
-        boolean found = false;
-        for (Account acc: accounts) {
-            if (acc.getId() == id) {
-                found = true;
-                account = acc;
-                break;
-            }
-        }
-        if (!found) {
-            throw new RuntimeException("Not found");
-        }
-
-        try {
-            if (dto.getSite() != null) {
-                account.setSite(dto.getSite());
-                changed = true;
-            }
-
-            if (dto.getUsername() != null) {
-                account.setUsername(dto.getUsername());
-                changed = true;
-            }
-
-            if (dto.getPassword() != null) {
-                account.setPassword(dto.getPassword());
-                changed = true;
-            }
-
-            if (changed) {
-                account.setLastChange(LocalDateTime.now().toString());
-            } else {
-                throw new RuntimeException("Nothing different");
-            }
-        } catch (AssertionError ex) {
-            System.out.println("Account not found");
-        }
-
-        return account;
+    public void addAccount() {
+        Account newAcc = service.addAccount(new Account(sc.nextLine(), sc.nextLine(), sc.nextLine()));
+        println("New account added.");
+        showAccount(newAcc);
     }
 }
