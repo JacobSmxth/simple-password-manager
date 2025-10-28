@@ -16,28 +16,36 @@ public class ManagerService {
     }
 
     public void deleteAccount(int id) {
+        boolean found = false;
         for (Account acc : accounts) {
             if (acc.getId() == id) {
+                found = true;
                 accounts.remove(acc);
-            } else {
-                throw new RuntimeException("Not found");
+                break;
             }
         }
+        if (!found) {
+            throw new RuntimeException("Not found");
+        }
+
     }
 
     public Account changeAccount(int id, AccountUpdateDTO dto) { // Plan to make an accountDTO thing
         Account account = null;
         boolean changed = false;
+        boolean found = false;
         for (Account acc: accounts) {
             if (acc.getId() == id) {
+                found = true;
                 account = acc;
-            } else {
-                throw new RuntimeException("Not found");
+                break;
             }
+        }
+        if (!found) {
+            throw new RuntimeException("Not found");
         }
 
         try {
-            assert account != null;
             if (dto.getSite() != null) {
                 account.setSite(dto.getSite());
                 changed = true;
