@@ -1,3 +1,8 @@
+package service;
+
+import domain.Account;
+import dto.AccountUpdateDTO;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -70,7 +75,7 @@ public class ManagerService {
             dto.setPassword(sc.nextLine());
         }
         service.changeAccount(id, dto);
-        System.out.println("Account has been updated.");
+        System.out.println("domain.Account has been updated.");
     }
 
     public void closeScanner() {

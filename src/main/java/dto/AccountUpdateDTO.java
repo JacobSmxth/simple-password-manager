@@ -1,3 +1,5 @@
+package dto;
+
 public class AccountUpdateDTO {
     private String site;
     private String username;
