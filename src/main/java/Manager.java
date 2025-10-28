@@ -4,6 +4,11 @@ public class Manager {
 
         s.addAccount();
 
+        s.changeAccount();
+
+
+        s.showAllAccounts();
+
         // Working CLI coming
 
 
