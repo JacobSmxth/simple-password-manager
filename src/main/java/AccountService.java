@@ -41,7 +41,7 @@ public class AccountService {
         Account account = null;
         boolean changed = false;
         boolean found = false;
-        for (Account acc: accounts) { // Did this instead of accounts.get(index) because after a delete the id might not stay the same. And manually tracking indexes might be just as slow as this
+        for (Account acc : accounts) { // Did this instead of accounts.get(index) because after a delete the id might not stay the same. And manually tracking indexes might be just as slow as this
             if (acc.getId() == id) {
                 found = true;
                 account = acc;
@@ -52,30 +52,27 @@ public class AccountService {
             throw new RuntimeException("Not found");
         }
 
-        try {
-            if (dto.getSite() != null) {
-                account.setSite(dto.getSite());
-                changed = true;
-            }
-
-            if (dto.getUsername() != null) {
-                account.setUsername(dto.getUsername());
-                changed = true;
-            }
-
-            if (dto.getPassword() != null) {
-                account.setPassword(dto.getPassword());
-                changed = true;
-            }
-
-            if (changed) {
-                account.setLastChange(LocalDateTime.now().toString());
-            } else {
-                throw new RuntimeException("Nothing different");
-            }
-        } catch (AssertionError ex) {
-            System.out.println("Account not found");
+        if (dto.getSite() != null) {
+            account.setSite(dto.getSite());
+            changed = true;
         }
+
+        if (dto.getUsername() != null) {
+            account.setUsername(dto.getUsername());
+            changed = true;
+        }
+
+        if (dto.getPassword() != null) {
+            account.setPassword(dto.getPassword());
+            changed = true;
+        }
+
+        if (changed) {
+            account.setLastChange(LocalDateTime.now().toString());
+        } else {
+            throw new RuntimeException("Nothing different");
+        }
+
 
         return account;
     }
