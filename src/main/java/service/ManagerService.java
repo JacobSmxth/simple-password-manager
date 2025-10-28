@@ -5,6 +5,7 @@ import dto.AccountUpdateDTO;
 import exception.GlobalExceptionHandler;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ManagerService {
@@ -32,13 +33,22 @@ public class ManagerService {
 
     public void showAllAccounts() {
         println("\n=== All Accounts ===\n");
-        List<Account> accs = service.listAllAccounts();
-        for (int i = 0; i < accs.size(); i++) {
-            showAccount(accs.get(i));
-            if (i != accs.size() - 1) {
+        Map<Long, Account> accs = service.listAllAccounts();
+
+        if (accs.isEmpty()) {
+            println("No accounts found.");
+            return;
+        }
+
+        Account[] accountArray = accs.values().toArray(new Account[0]);
+
+        for (int i = 0; i < accountArray.length; i++) {
+            showAccount(accountArray[i]);
+            if (i != accountArray.length - 1) {
                 println(",");
             }
         }
+        println("");
     }
 
     public void addAccount() {
@@ -65,7 +75,7 @@ public class ManagerService {
         AccountUpdateDTO dto = new AccountUpdateDTO();
         GlobalExceptionHandler.handleWithRetry(() -> {
             print("Enter account id: ");
-            int id = Integer.parseInt(sc.nextLine());
+            Long id = Long.parseLong(sc.nextLine());
             service.checkId(id);
             print("Would you like to change site? (y/n): ");
             if (sc.nextLine().equalsIgnoreCase("y")) {
@@ -85,7 +95,6 @@ public class ManagerService {
             service.changeAccount(id, dto);
             System.out.println("domain.Account has been updated.");
         }, sc);
-
     }
 
     public void closeScanner() {

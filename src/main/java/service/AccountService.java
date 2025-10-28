@@ -6,67 +6,49 @@ import exception.AccountNotChanged;
 import exception.AccountNotFound;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AccountService {
-    List<Account> accounts = new ArrayList<>(); // I should switch to hashMap
-    int counter = 0;
+    private Long counter = 0L;
+    private Map<Long, Account> accounts = new HashMap<>(); // I should switch to hashMap
 
     public AccountService() {
         // loadAccounts function
         // loadCounter function
     }
 
-    public List<Account> listAllAccounts() {
+    public Map<Long, Account> listAllAccounts() {
         return accounts;
     }
 
     public Account addAccount(Account account) {
-        counter++;
-        account.setId(counter);
-        accounts.add(account);
+        account.setId(++counter);
+        accounts.put(counter, account);
         return account;
     }
 
-    public boolean checkId(int id) {
-        for (Account acc : accounts) {
-            if (acc.getId() == id) {
-                return true;
-            }
+    public void checkId(Long id) {
+        boolean result = accounts.containsKey(id);
+        if (!result) {
+            throw new AccountNotFound(id);
         }
-        throw new AccountNotFound(id);
     }
 
-    public void deleteAccount(int id) throws AccountNotFound{
-        boolean found = false;
-        for (Account acc : accounts) {
-            if (acc.getId() == id) {
-                found = true;
-                accounts.remove(acc);
-                break;
-            }
+    public void deleteAccount(Long id) throws AccountNotFound{
+        Account removed = accounts.remove(id);
+        if (removed == null) {
+            throw new AccountNotFound(id);
         }
-        if (!found) {
+    }
+
+    public Account changeAccount(Long id, AccountUpdateDTO dto) { // Plan to make an accountDTO thing
+        Account account = accounts.get(id);
+        if (account == null) {
             throw new AccountNotFound(id);
         }
 
-    }
-
-    public Account changeAccount(int id, AccountUpdateDTO dto) { // Plan to make an accountDTO thing
-        Account account = null;
         boolean changed = false;
-        boolean found = false;
-        for (Account acc : accounts) { // Did this instead of accounts.get(index) because after a delete the id might not stay the same. And manually tracking indexes might be just as slow as this
-            if (acc.getId() == id) {
-                found = true;
-                account = acc;
-                break;
-            }
-        }
-        if (!found) {
-            throw new AccountNotFound(id);
-        }
 
         if (dto.getSite() != null) {
             account.setSite(dto.getSite());
@@ -88,7 +70,6 @@ public class AccountService {
         } else {
             throw new AccountNotChanged("Account already contains those values");
         }
-
 
         return account;
     }

@@ -3,7 +3,7 @@ package domain;
 import java.time.LocalDateTime;
 
 public class Account {
-    private int id;
+    private Long id;
     private String site;
     private String username;
     private String password; // Password managers don't hash passwords as they need to be seen by users
@@ -16,13 +16,13 @@ public class Account {
         this.lastChange = LocalDateTime.now().toString();
     }
 
-    public int getId() {return id;}
+    public Long getId() {return id;}
     public String getSite() {return site;}
     public String getUsername() {return username;}
     public String getPassword() {return password;}
     public String getLastChange() {return lastChange;}
 
-    public void setId(int id) {this.id = id;}
+    public void setId(Long id) {this.id = id;}
     public void setSite(String site) {this.site = site;}
     public void setUsername(String username) {this.username = username;}
     public void setPassword(String password) {this.password = password;}
