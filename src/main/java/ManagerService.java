@@ -27,6 +27,7 @@ public class ManagerService {
 
     public Account changeAccount(int id, AccountUpdateDTO dto) { // Plan to make an accountDTO thing
         Account account = null;
+        boolean changed = false;
         for (Account acc: accounts) {
             if (acc.getId() == id) {
                 account = acc;
@@ -37,17 +38,24 @@ public class ManagerService {
 
         if (dto.getSite() != null) {
             account.setSite(dto.getSite());
+            changed = true;
         }
 
         if (dto.getUsername() != null) {
             account.setUsername(dto.getUsername());
+            changed = true;
         }
 
         if (dto.getPassword() != null) {
             account.setPassword(dto.getPassword());
+            changed = true;
         }
 
-        account.setLastChange(LocalDateTime.now().toString());
+        if (changed) {
+            account.setLastChange(LocalDateTime.now().toString());
+        } else {
+            throw new RuntimeException("Nothing different");
+        }
 
         return account;
     }
