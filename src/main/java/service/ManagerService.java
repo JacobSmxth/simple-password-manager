@@ -3,6 +3,7 @@ package service;
 import domain.Account;
 import dto.AccountUpdateDTO;
 import exception.GlobalExceptionHandler;
+import exception.InvalidChoice;
 
 import java.util.List;
 import java.util.Map;
@@ -118,6 +119,61 @@ public class ManagerService {
                 println("Account not deleted");
             }
         }, sc);
+    }
+
+    public boolean showMenu() {
+        println("\n=== Password Manager ===\n");
+        println("1. Add Account");
+        println("2. Delete Account");
+        println("3. Change Account Values");
+        println("4. List Accounts");
+        println("5. Exit");
+        println("");
+        return takeChoice();
+    }
+
+    public boolean takeChoice() {
+        print("Make a choice: ");
+        int choice = Integer.parseInt(sc.nextLine());
+        if (choice < 1 || choice > 5) {
+            throw new InvalidChoice("Choice must be between 1 and 5.");
+        }
+        return processChoice(choice);
+    }
+
+    public boolean processChoice(int choice) {
+        switch (choice) {
+            case 1:
+                addAccount();
+                break;
+            case 2:
+                deleteAccount();
+                break;
+            case 3:
+                changeAccount();
+                break;
+            case 4:
+                showAllAccounts();
+                break;
+            case 5:
+                closeScanner();
+                println("Goodbye!");
+                return false;
+            default:
+                println("How'd you get here?!");
+                break;
+        }
+        return true;
+    }
+
+    public void run() {
+        GlobalExceptionHandler.handleWithRetry(() -> {
+            boolean running = true;
+            while (running) {
+                running = showMenu();
+            }
+        }, sc);
+
     }
 
     public void closeScanner() {

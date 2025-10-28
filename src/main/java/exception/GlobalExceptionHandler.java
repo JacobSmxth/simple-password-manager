@@ -11,6 +11,8 @@ public class GlobalExceptionHandler {
             System.out.println("Error: " + ex.getMessage());
         } else if (ex instanceof NumberFormatException) {
             System.out.println("Error: Invalid number format. Please enter valid number");
+        } else if (ex instanceof InvalidChoice) {
+            System.out.println("Error: " + ex.getMessage());
         } else {
             System.err.println("Unexpected error: " + ex.getMessage());
             ex.printStackTrace();

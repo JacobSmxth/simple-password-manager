@@ -3,19 +3,6 @@ import service.ManagerService;
 public class Manager {
     public static void main(String[] args) {
         ManagerService s = new ManagerService();
-
-        s.addAccount();
-
-        s.deleteAccount();
-
-
-        s.showAllAccounts();
-
-        // Working CLI coming
-
-        s.closeScanner(); // End Application
-
+        s.run();
     }
-
-
 }
