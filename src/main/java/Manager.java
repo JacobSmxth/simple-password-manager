@@ -11,6 +11,7 @@ public class Manager {
 
         // Working CLI coming
 
+        s.closeScanner(); // End Application
 
     }
 

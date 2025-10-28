@@ -3,14 +3,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountService {
-    List<Account> accounts = new ArrayList<>();
+    List<Account> accounts = new ArrayList<>(); // I should switch to hashMap
+    int counter = 0;
+
+    public AccountService() {
+        // loadAccounts function
+        // loadCounter function
+    }
 
     public List<Account> listAllAccounts() {
         return accounts;
     }
 
     public Account addAccount(Account account) {
-        account.setId(accounts.size() + 1);
+        counter++;
+        account.setId(counter);
         accounts.add(account);
         return account;
     }

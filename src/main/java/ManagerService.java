@@ -73,4 +73,8 @@ public class ManagerService {
         System.out.println("Account has been updated.");
     }
 
+    public void closeScanner() {
+        sc.close();
+    }
+
 }
