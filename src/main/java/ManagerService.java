@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,8 @@ public class ManagerService {
         if (dto.getPassword() != null) {
             account.setPassword(dto.getPassword());
         }
+
+        account.setLastChange(LocalDateTime.now().toString());
 
         return account;
     }
