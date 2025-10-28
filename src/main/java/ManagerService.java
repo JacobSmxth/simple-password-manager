@@ -36,25 +36,30 @@ public class ManagerService {
             }
         }
 
-        if (dto.getSite() != null) {
-            account.setSite(dto.getSite());
-            changed = true;
-        }
+        try {
+            assert account != null;
+            if (dto.getSite() != null) {
+                account.setSite(dto.getSite());
+                changed = true;
+            }
 
-        if (dto.getUsername() != null) {
-            account.setUsername(dto.getUsername());
-            changed = true;
-        }
+            if (dto.getUsername() != null) {
+                account.setUsername(dto.getUsername());
+                changed = true;
+            }
 
-        if (dto.getPassword() != null) {
-            account.setPassword(dto.getPassword());
-            changed = true;
-        }
+            if (dto.getPassword() != null) {
+                account.setPassword(dto.getPassword());
+                changed = true;
+            }
 
-        if (changed) {
-            account.setLastChange(LocalDateTime.now().toString());
-        } else {
-            throw new RuntimeException("Nothing different");
+            if (changed) {
+                account.setLastChange(LocalDateTime.now().toString());
+            } else {
+                throw new RuntimeException("Nothing different");
+            }
+        } catch (AssertionError ex) {
+            System.out.println("Account not found");
         }
 
         return account;
