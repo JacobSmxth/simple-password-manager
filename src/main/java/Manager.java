@@ -6,7 +6,7 @@ public class Manager {
 
         s.addAccount();
 
-        s.changeAccount();
+        s.deleteAccount();
 
 
         s.showAllAccounts();

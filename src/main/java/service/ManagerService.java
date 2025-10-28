@@ -97,6 +97,29 @@ public class ManagerService {
         }, sc);
     }
 
+    public void deleteAccount() {
+        showAllAccounts();
+        println("\n");
+
+        if (service.listAllAccounts().isEmpty()) {
+            println("No accounts to delete");
+            return;
+        }
+
+        GlobalExceptionHandler.handleWithRetry(() -> {
+            print("Enter account id: ");
+            Long id = Long.parseLong(sc.nextLine());
+            Account acc = service.getAccount(id);
+            print("Are you sure you want to delete " + acc.getSite() + "'s account? (y/n): ");
+            if(sc.nextLine().equalsIgnoreCase("y")) {
+                service.deleteAccount(id);
+                println("Account deleted.");
+            } else {
+                println("Account not deleted");
+            }
+        }, sc);
+    }
+
     public void closeScanner() {
         sc.close();
     }

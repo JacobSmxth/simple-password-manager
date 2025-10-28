@@ -22,6 +22,11 @@ public class AccountService {
         return accounts;
     }
 
+    public Account getAccount(Long id) {
+        checkId(id);
+        return accounts.get(id);
+    }
+
     public Account addAccount(Account account) {
         account.setId(++counter);
         accounts.put(counter, account);
